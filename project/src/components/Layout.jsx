@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import css from './Layout.module.css';
 
 const Layout = () => {
   const location = useLocation();
@@ -16,13 +17,19 @@ const Layout = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className={css.pageContent}>
+      <div className={css.navContainer}>
         <h1>{getTitle()}</h1>
         <nav>
-          <Link to="/">Welcom</Link>
-          <Link to="formCompany">Company</Link>
-          <Link to="formSeeker">Seeker</Link>
+          <Link className={css.link} to="/">
+            Welcom
+          </Link>
+          <Link className={css.link} to="formCompany">
+            Company
+          </Link>
+          <Link className={css.link} to="formSeeker">
+            Seeker
+          </Link>
         </nav>
       </div>
       <Outlet />
