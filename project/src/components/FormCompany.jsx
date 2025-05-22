@@ -23,20 +23,17 @@ const FormCompany = () => {
         />
         <label htmlFor="email">email</label>
 
-        <input
-          className="input"
-          {...register('lastName', { required: true })}
-        />
+        <input className="input" {...register('email', { required: true })} />
         {errors.lastName && <p>Last name is required.</p>}
-        <label htmlFor="Phone number">Phone number</label>
 
+        <label htmlFor="password">password</label>
         <input
           className="input"
-          {...register('Phone number', { pattern: /\d+/ })}
+          {...register('password', { pattern: /\d+/ })}
         />
-        {errors.age && <p>Please enter number for age.</p>}
+        {errors.password && <p>Please enter number for password.</p>}
 
-        <input type="submit" />
+        <input type="submit" value="Sign Up" />
       </form>
     </div>
   );

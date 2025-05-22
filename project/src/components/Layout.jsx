@@ -7,12 +7,12 @@ const Layout = () => {
 
   const pathname = location.pathname;
 
-  const isCompanyFormPage = pathname.includes('companyForm');
-  const isSeekerFormPage = pathname.includes('seekerForm');
+  const isCompanyFormPage = pathname.includes('formCompany');
+  const isSeekerFormPage = pathname.includes('formSeeker');
 
   const getTitle = () => {
-    if (isCompanyFormPage) return 'formCompany';
-    if (isSeekerFormPage) return 'formSeeker';
+    if (isCompanyFormPage) return 'Company';
+    if (isSeekerFormPage) return 'Seeker';
     return 'Welcom';
   };
 
@@ -24,11 +24,9 @@ const Layout = () => {
           <Link className={css.link} to="/">
             Welcom
           </Link>
-          <Link className={css.link} to="formCompany">
-            Company
-          </Link>
-          <Link className={css.link} to="formSeeker">
-            Seeker
+
+          <Link className={css.link} to="register">
+            Sign Up
           </Link>
         </nav>
       </div>

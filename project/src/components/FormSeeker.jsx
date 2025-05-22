@@ -32,11 +32,19 @@ const FormSeeker = () => {
         <input className="input" {...register('email', { pattern: /\d+/ })} />
         {errors.email && <p>Please enter email.</p>}
 
-        <label htmlFor="Phone number">Phone number</label>
-        <input className="input" {...register('Phone ', { pattern: /\d+/ })} />
-        {errors.phone && <p>Please enter phone number </p>}
-
-        <input type="submit" />
+        <label htmlFor="password">password</label>
+        <input
+          className="input"
+          {...register('password', { pattern: /\d+/ })}
+        />
+        {errors.password && <p>Please enter number for password.</p>}
+        <label htmlFor="password">Confirm password</label>
+        <input
+          className="input"
+          {...register('password', { pattern: /\d+/ })}
+        />
+        {errors.password && <p>Please enter number for password.</p>}
+        <input type="submit" value="Sign Up" />
       </form>
     </div>
   );
