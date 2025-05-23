@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import css from './formStyle.module.css';
+import { Link } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [userType, setUserType] = useState('');
@@ -8,15 +11,16 @@ const RegisterForm = () => {
   const {
     register,
     reset,
+    watch,
     handleSubmit,
     formState: { errors }
   } = useForm();
-
   useEffect(() => {
-    const messages = Object.values(errors).map((err) => err.message);
-    if (messages.length > 0) {
-      alert(messages.join('\n'));
-    }
+    Object.entries(errors).forEach(([_, error]) => {
+      if (error?.message) {
+        toast.error(error.message);
+      }
+    });
   }, [errors]);
 
   const onSubmit = async (data) => {
@@ -32,72 +36,84 @@ const RegisterForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error('you have error!');
+        throw new Error(' Error, your registration was not successful!');
       }
       const result = await response.json();
       console.log(result);
-      alert('Registration successful!');
+      toast.success('Registration successful!');
       reset();
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
   return (
-    <div>
-      <div className={css.userTypeSelector}>
-        <button className={css.btn} onClick={() => setUserType('company')}>
-          Company
-        </button>
-        <button className={css.btn} onClick={() => setUserType('seeker')}>
-          Seeker
-        </button>
-      </div>
+    <div className={css.container}>
+      <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
+        <div className={css.userTypeSelector}>
+          <button
+            className={css.btn}
+            type="button"
+            onClick={() => setUserType('company')}
+          >
+            Company
+          </button>
+          <button
+            className={css.btn}
+            type="button"
+            onClick={() => setUserType('seeker')}
+          >
+            Seeker
+          </button>
+        </div>
+        <h2 className={css.title}>Sign up</h2>
 
-      {userType && (
-        <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="name">Name</label>
-          <input
-            className="input"
-            {...register('name', { required: 'Name is required' })}
-          />
+        <input
+          placeholder="username"
+          className={css.input}
+          {...register('name', { required: 'Name is required' })}
+        />
 
-          <label htmlFor="email">Email</label>
-          <input
-            className="input"
-            type="email"
-            {...register('email', { required: 'Email is required' })}
-          />
+        <input
+          className={css.input}
+          type="email"
+          placeholder="email"
+          {...register('email', { required: 'Email is required' })}
+        />
 
-          <label htmlFor="password">Password</label>
-          <input
-            className="input"
-            type="password"
-            {...register('password', {
-              required: 'Password is required',
-              minLength: {
-                value: 8,
-                message: 'Password must be at least 8 characters'
-              }
-            })}
-          />
+        <input
+          className={css.input}
+          type="password"
+          placeholder="password"
+          {...register('password', {
+            required: 'Password is required',
+            minLength: {
+              value: 8,
+              message: 'Password must be at least 8 characters'
+            }
+          })}
+        />
 
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            className="input"
-            type="password"
-            {...register('confirmPassword', {
-              required: 'Please confirm your password',
-              minLength: {
-                value: 8,
-                message: 'Password must be at least 8 characters'
-              }
-            })}
-          />
+        <input
+          className={css.input}
+          type="password"
+          placeholder="confirm password"
+          {...register('confirmPassword', {
+            required: 'Please confirm your password',
+            validate: (value) =>
+              value === watch('password') || 'Confirm password'
+          })}
+        />
 
-          <input type="submit" value="Sign Up" />
-        </form>
-      )}
+        <input type="submit" value="Sign Up" />
+        <p>
+          already have account?{' '}
+          <Link className={css.link} to="/login">
+            Log in
+          </Link>
+        </p>
+      </form>
+      <ToastContainer />
     </div>
   );
 };

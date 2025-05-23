@@ -28,6 +28,9 @@ const Layout = () => {
           <Link className={css.link} to="register">
             Sign Up
           </Link>
+          <Link className={css.link} to="login">
+            Log in
+          </Link>
         </nav>
       </div>
       <Outlet />

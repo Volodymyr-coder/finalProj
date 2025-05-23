@@ -1,9 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import FormCompany from './components/formCompany';
 import LayoutPage from './pages/LayoutPage';
-import FormSeeker from './components/formSeeker';
 import RegisterPage from './pages/RegisterPage';
+import LogInForm from './components/LogInForm';
 
 function App() {
   return (
@@ -13,6 +12,7 @@ function App() {
           {/* <Route path="formCompany" element={<FormCompany />} />
           <Route path="/formSeeker" element={<FormSeeker />} /> */}
           <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<LogInForm />} />
         </Route>
       </Routes>
     </>
