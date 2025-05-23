@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from 'react';
 import css from './formStyle.module.css';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -12,14 +10,6 @@ const LogInForm = () => {
     handleSubmit,
     formState: { errors }
   } = useForm();
-
-  useEffect(() => {
-    Object.entries(errors).forEach(([_, error]) => {
-      if (error?.message) {
-        toast.error(error.message);
-      }
-    });
-  }, [errors]);
 
   const onSubmit = async (data) => {
     try {
@@ -37,10 +27,10 @@ const LogInForm = () => {
 
       const result = await response.json();
       console.log('Login successful:', result);
-      toast.success('Login successful!');
+      alert('Registration successful!');
       reset();
     } catch (error) {
-      toast.error(error.message);
+      alert(error.message);
     }
   };
 
@@ -55,6 +45,7 @@ const LogInForm = () => {
           placeholder="Email"
           {...register('email', { required: 'Email is required' })}
         />
+        {errors.email && <p className={css.error}>{errors.email.message}</p>}
 
         <input
           className={css.input}
@@ -68,6 +59,9 @@ const LogInForm = () => {
             }
           })}
         />
+        {errors.password && (
+          <p className={css.error}>{errors.password.message}</p>
+        )}
 
         <input className={css.submit} type="submit" value="Log In" />
         <p>
@@ -77,7 +71,6 @@ const LogInForm = () => {
           </Link>
         </p>
       </form>
-      <ToastContainer />
     </div>
   );
 };

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import css from './formStyle.module.css';
 import { Link } from 'react-router-dom';
 
 const RegisterForm = () => {
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType] = useState('seeker');
 
   const {
     register,
@@ -15,15 +13,26 @@ const RegisterForm = () => {
     handleSubmit,
     formState: { errors }
   } = useForm();
+
   useEffect(() => {
-    Object.entries(errors).forEach(([_, error]) => {
-      if (error?.message) {
-        toast.error(error.message);
-      }
+    reset({
+      companyName: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     });
-  }, [errors]);
+  }, [userType, reset]);
 
   const onSubmit = async (data) => {
+    delete data.confirmPassword;
+    if (userType === 'company') {
+      delete data.firstName;
+      delete data.lastName;
+    } else {
+      delete data.companyName;
+    }
     const fullData = { ...data, userType };
     console.log('Form Data:', fullData);
     try {
@@ -40,26 +49,30 @@ const RegisterForm = () => {
       }
       const result = await response.json();
       console.log(result);
-      toast.success('Registration successful!');
+      alert('Registration successful!');
       reset();
     } catch (error) {
-      toast.error(error.message);
+      alert(error.message);
     }
   };
 
   return (
     <div className={css.container}>
-      <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        key={userType}
+        className={css.form}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className={css.userTypeSelector}>
           <button
-            className={css.btn}
+            className={`${css.btn} ${userType === 'company' ? css.active : ''}`}
             type="button"
             onClick={() => setUserType('company')}
           >
             Company
           </button>
           <button
-            className={css.btn}
+            className={`${css.btn} ${userType === 'seeker' ? css.active : ''}`}
             type="button"
             onClick={() => setUserType('seeker')}
           >
@@ -68,11 +81,37 @@ const RegisterForm = () => {
         </div>
         <h2 className={css.title}>Sign up</h2>
 
-        <input
-          placeholder="username"
-          className={css.input}
-          {...register('name', { required: 'Name is required' })}
-        />
+        {userType === 'company' ? (
+          <input
+            placeholder="company name"
+            className={css.input}
+            {...register('companyName', {
+              required: 'Company name is required'
+            })}
+          />
+        ) : (
+          <>
+            <input
+              placeholder="first Name"
+              className={css.input}
+              {...register('firstName', {
+                required: 'first name is required'
+              })}
+            />
+            {errors.firstName && (
+              <p className={css.error}>{errors.firstName.message}</p>
+            )}
+
+            <input
+              placeholder="last Name"
+              className={css.input}
+              {...register('lastName', { required: 'last name is required' })}
+            />
+            {errors.lastName && (
+              <p className={css.error}>{errors.lastName.message}</p>
+            )}
+          </>
+        )}
 
         <input
           className={css.input}
@@ -80,6 +119,7 @@ const RegisterForm = () => {
           placeholder="email"
           {...register('email', { required: 'Email is required' })}
         />
+        {errors.email && <p className={css.error}>{errors.email.message}</p>}
 
         <input
           className={css.input}
@@ -93,6 +133,9 @@ const RegisterForm = () => {
             }
           })}
         />
+        {errors.password && (
+          <p className={css.error}>{errors.password.message}</p>
+        )}
 
         <input
           className={css.input}
@@ -104,16 +147,18 @@ const RegisterForm = () => {
               value === watch('password') || 'Confirm password'
           })}
         />
+        {errors.confirmPassword && (
+          <p className={css.error}>{errors.confirmPassword.message}</p>
+        )}
 
         <input type="submit" value="Sign Up" />
         <p>
-          already have account?{' '}
+          already have account?
           <Link className={css.link} to="/login">
             Log in
           </Link>
         </p>
       </form>
-      <ToastContainer />
     </div>
   );
 };
