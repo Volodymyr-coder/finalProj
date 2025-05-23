@@ -19,11 +19,28 @@ const RegisterForm = () => {
     }
   }, [errors]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const fullData = { ...data, userType };
     console.log('Form Data:', fullData);
-    alert('Registration successful!');
-    reset();
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fullData)
+      });
+
+      if (!response.ok) {
+        throw new Error('you have error!');
+      }
+      const result = await response.json();
+      console.log(result);
+      alert('Registration successful!');
+      reset();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
